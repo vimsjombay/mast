@@ -1,0 +1,48 @@
+name: myapp
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  google_fonts: ^7.0.2
+  provider: ^6.1.2
+  fl_chart: ^1.1.1
+  intl: ^0.20.2
+  collection: ^1.18.0
+  uuid: ^4.4.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.9
+  hive_ce_generator: ^1.11.1
+  rename: ^3.1.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  android: true
+  ios: false # Since we are only building for android
+  image_path: "assets/icon/icon.png"
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/fonts/
+    - assets/icon/
+
+  fonts:
+    - family: PTSans
+      fonts:
+        - asset: assets/fonts/PTSans-Regular.ttf
+        - asset: assets/fonts/PTSans-Bold.ttf
+          weight: 700
