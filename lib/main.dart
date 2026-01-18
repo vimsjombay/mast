@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/analytics_screen.dart';
 import 'package:myapp/budget_screen.dart';
 import 'package:myapp/dashboard_screen.dart';
@@ -71,7 +72,7 @@ class MainScreenState extends State<MainScreen> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(_widgetTitles[_selectedIndex], style: const TextStyle(fontFamily: 'PTSans', fontWeight: FontWeight.bold)),
+        title: Text(_widgetTitles[_selectedIndex]),
         actions: [
           IconButton(
             icon: Icon(themeProvider.themeMode == ThemeMode.dark ? Icons.light_mode : Icons.dark_mode),
@@ -121,110 +122,52 @@ class ThemeProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  static final TextTheme _textTheme = const TextTheme(
-    displayLarge: TextStyle(fontFamily: 'PTSans', fontSize: 57, fontWeight: FontWeight.bold),
-    titleLarge: TextStyle(fontFamily: 'PTSans', fontSize: 22, fontWeight: FontWeight.w500),
-    bodyMedium: TextStyle(fontFamily: 'PTSans', fontSize: 14),
-    bodyLarge: TextStyle(fontFamily: 'PTSans', fontSize: 16),
-    headlineMedium: TextStyle(fontFamily: 'PTSans', fontSize: 24, fontWeight: FontWeight.bold),
-  );
-
-  static final TextTheme _darkTextTheme = const TextTheme(
-    displayLarge: TextStyle(fontFamily: 'PTSans', fontSize: 57, fontWeight: FontWeight.bold, color: Colors.white),
-    titleLarge: TextStyle(fontFamily: 'PTSans', fontSize: 22, fontWeight: FontWeight.w500, color: Colors.white),
-    bodyMedium: TextStyle(fontFamily: 'PTSans', fontSize: 14, color: Colors.white),
-    bodyLarge: TextStyle(fontFamily: 'PTSans', fontSize: 16, color: Colors.white),
-    headlineMedium: TextStyle(fontFamily: 'PTSans', fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+  static final TextTheme _textTheme = TextTheme(
+    displayLarge: GoogleFonts.inter(fontSize: 57, fontWeight: FontWeight.bold),
+    titleLarge: GoogleFonts.inter(fontSize: 22, fontWeight: FontWeight.w500),
+    bodyMedium: GoogleFonts.inter(fontSize: 14),
+    bodyLarge: GoogleFonts.inter(fontSize: 16),
+    headlineMedium: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.bold),
   );
 
   static final ThemeData _lightTheme = ThemeData(
     useMaterial3: true,
-    fontFamily: 'PTSans',
     colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.deepPurple,
+      seedColor: Colors.blue,
       brightness: Brightness.light,
     ),
     textTheme: _textTheme,
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.white,
-      foregroundColor: Colors.black,
-      elevation: 1,
-      shadowColor: Colors.black12,
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.blue,
+      foregroundColor: Colors.white,
+      titleTextStyle: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.bold),
     ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      selectedItemColor: Colors.deepPurple,
-      unselectedItemColor: Colors.grey,
-    ),
-    cardTheme: CardThemeData(
-      elevation: 4,
-      shadowColor: Colors.black26,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
-    ),
-    expansionTileTheme: ExpansionTileThemeData(
-      iconColor: Colors.deepPurple,
-      textColor: Colors.deepPurple,
-      collapsedIconColor: Colors.grey[600],
-      collapsedTextColor: Colors.black87,
-    ),
-    listTileTheme: const ListTileThemeData(
-      iconColor: Colors.deepPurple,
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      ),
     ),
   );
 
   static final ThemeData _darkTheme = ThemeData(
     useMaterial3: true,
-    fontFamily: 'PTSans',
     colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.deepPurple,
+      seedColor: Colors.blue,
       brightness: Brightness.dark,
-      surface: const Color(0xFF1E1E1E),
-      onSurface: Colors.white,
     ),
-    scaffoldBackgroundColor: const Color(0xFF121212),
-    textTheme: _darkTextTheme,
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFF1E1E1E),
+    textTheme: _textTheme,
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.blue[900],
       foregroundColor: Colors.white,
-      elevation: 2,
-      shadowColor: Colors.black87,
-    ),
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      selectedItemColor: Colors.deepPurple[300],
-      unselectedItemColor: Colors.grey[500],
-      backgroundColor: const Color(0xFF1E1E1E),
-      elevation: 2,
-    ),
-    cardTheme: CardThemeData(
-      color: const Color(0xFF1E1E1E),
-      elevation: 6,
-      shadowColor: Colors.black54,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-    ),
-    expansionTileTheme: ExpansionTileThemeData(
-      iconColor: Colors.deepPurple[300],
-      textColor: Colors.deepPurple[300],
-      collapsedIconColor: Colors.grey[400],
-      collapsedTextColor: Colors.white,
-    ),
-    listTileTheme: ListTileThemeData(
-      iconColor: Colors.deepPurple[300],
-      tileColor: const Color(0xFF1E1E1E),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-    ),
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: Colors.deepPurple[400],
-      foregroundColor: Colors.black,
-      elevation: 8,
-      highlightElevation: 12,
-    ),
-    textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(foregroundColor: Colors.deepPurple[300]),
+      titleTextStyle: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.bold),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.deepPurple[400],
-        foregroundColor: Colors.black,
-        elevation: 4,
+        backgroundColor: Colors.blue[700],
+        foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       ),
