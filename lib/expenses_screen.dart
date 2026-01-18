@@ -151,13 +151,13 @@ class ExpensesScreenState extends State<ExpensesScreen> {
                     ? Center(
                         child: Text(
                           'No expenses for this month.',
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.color
-                                  ?.withAlpha(153)),
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.color
+                                    ?.withOpacity(0.6),
+                              ),
                         ),
                       )
                     : ListView.builder(
@@ -183,24 +183,17 @@ class ExpensesScreenState extends State<ExpensesScreen> {
                               collapsedShape: const Border(),
                               title: Text(
                                 '${DateFormat.MMMMd().format(date)} - ${DateFormat.EEEE().format(date)}',
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .titleLarge
-                                        ?.color),
+                                style: Theme.of(context).textTheme.titleLarge,
                               ),
                               subtitle: Text(
                                 'Total: ₹${dayTotal.toStringAsFixed(2)}',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge
-                                        ?.color
-                                        ?.withAlpha(153),
-                                    fontWeight: FontWeight.w600),
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.color
+                                          ?.withOpacity(0.6),
+                                    ),
                               ),
                               initiallyExpanded: date.day == today.day &&
                                   date.month == today.month &&
@@ -213,22 +206,16 @@ class ExpensesScreenState extends State<ExpensesScreen> {
                                     _categoryIcons[expense.category] ??
                                         Icons.category,
                                     size: 30,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
                                   ),
                                   title: Text(
                                     expense.category,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                    style: Theme.of(context).textTheme.bodyLarge,
                                   ),
                                   trailing: Text(
                                     '₹${expense.amount.toStringAsFixed(2)}',
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                   ),
                                 );
                               }).toList(),
@@ -253,8 +240,7 @@ class ExpensesScreenState extends State<ExpensesScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Delete Expense',
-              style: TextStyle(fontWeight: FontWeight.bold)),
+          title: const Text('Delete Expense'),
           content: const Text('Are you sure you want to delete this expense?'),
           actions: [
             TextButton(
@@ -303,18 +289,16 @@ class ExpensesScreenState extends State<ExpensesScreen> {
             children: [
               Text(
                 DateFormat.yMMMM().format(_selectedMonth),
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
               ),
               const SizedBox(height: 4),
               Text(
                 'Total: ₹${totalForMonth.toStringAsFixed(2)}',
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Theme.of(context).colorScheme.primary.withAlpha(200),
-                    fontWeight: FontWeight.w600),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+                    ),
               ),
             ],
           ),
@@ -359,17 +343,17 @@ class ExpensePreviewSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Expense Details', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            Text('Expense Details', style: Theme.of(context).textTheme.headlineMedium),
             const SizedBox(height: 24),
-            Text('Category: ${expense.category}', style: const TextStyle(fontSize: 18)),
+            Text('Category: ${expense.category}', style: Theme.of(context).textTheme.bodyLarge),
             const SizedBox(height: 12),
-            Text('Amount: ₹${expense.amount.toStringAsFixed(2)}', style: const TextStyle(fontSize: 18)),
+            Text('Amount: ₹${expense.amount.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodyLarge),
             const SizedBox(height: 12),
-            Text('Date: ${DateFormat.yMMMd().format(expense.date)}', style: const TextStyle(fontSize: 18)),
+            Text('Date: ${DateFormat.yMMMd().format(expense.date)}', style: Theme.of(context).textTheme.bodyLarge),
             if (expense.description != null && expense.description!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 12.0),
-                child: Text('Description: ${expense.description}', style: const TextStyle(fontSize: 18)),
+                child: Text('Description: ${expense.description}', style: Theme.of(context).textTheme.bodyLarge),
               ),
             const SizedBox(height: 24),
             Row(
@@ -377,12 +361,12 @@ class ExpensePreviewSheet extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Close', style: TextStyle(fontSize: 16)),
+                  child: const Text('Close'),
                 ),
                 const SizedBox(width: 12),
                 ElevatedButton(
                   onPressed: onEdit,
-                  child: const Text('Edit', style: TextStyle(fontSize: 16)),
+                  child: const Text('Edit'),
                 ),
                 const SizedBox(width: 12),
                 ElevatedButton(
@@ -391,7 +375,7 @@ class ExpensePreviewSheet extends StatelessWidget {
                     backgroundColor: Theme.of(context).colorScheme.error,
                     foregroundColor: Theme.of(context).colorScheme.onError,
                   ),
-                  child: const Text('Delete', style: TextStyle(fontSize: 16)),
+                  child: const Text('Delete'),
                 ),
               ],
             ),
@@ -494,8 +478,7 @@ class AddExpenseFormState extends State<AddExpenseForm> {
         return AlertDialog(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          title: const Text('Create New Category',
-              style: TextStyle(fontWeight: FontWeight.bold)),
+          title: const Text('Create New Category'),
           content: TextField(
             controller: newCategoryController,
             decoration: InputDecoration(
@@ -553,8 +536,7 @@ class AddExpenseFormState extends State<AddExpenseForm> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(widget.expense == null ? 'Add Expense' : 'Edit Expense',
-                    style: const TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.bold)),
+                    style: Theme.of(context).textTheme.headlineMedium),
                 const SizedBox(height: 24),
                 DropdownButtonFormField<String>(
                   initialValue: _selectedCategory,
@@ -623,9 +605,7 @@ class AddExpenseFormState extends State<AddExpenseForm> {
                     Expanded(
                       child: Text(
                         'Date: ${DateFormat.yMMMd().format(_selectedDate)}',
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Theme.of(context).colorScheme.onSurface),
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ),
                     IconButton(
@@ -643,9 +623,11 @@ class AddExpenseFormState extends State<AddExpenseForm> {
                         borderRadius: BorderRadius.circular(10)),
                   ),
                   child: Text(
-                      widget.expense == null ? 'Add Expense' : 'Save Changes',
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold)),
+                    widget.expense == null ? 'Add Expense' : 'Save Changes',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
                 ),
               ],
             ),
