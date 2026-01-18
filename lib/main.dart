@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/analytics_screen.dart';
 import 'package:myapp/budget_screen.dart';
+import 'package:myapp/dashboard_screen.dart';
 import 'package:myapp/expenses_screen.dart';
 import 'package:myapp/services/hive_service.dart';
 import 'package:provider/provider.dart';
@@ -47,12 +48,14 @@ class MainScreenState extends State<MainScreen> {
 
   static const List<Widget> _widgetOptions = <Widget>[
     ExpensesScreen(),
+    DashboardScreen(),
     BudgetScreen(),
     AnalyticsScreen(),
   ];
 
   static const List<String> _widgetTitles = <String>[
     'Expenses',
+    'Dashboard',
     'Budget',
     'Analytics',
   ];
@@ -84,6 +87,10 @@ class MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.money),
             label: 'Expenses',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard),
+            label: 'Dashboard',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_balance_wallet),

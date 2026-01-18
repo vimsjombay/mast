@@ -17,12 +17,8 @@ A mobile application designed to help users track their daily expenses, manage t
 ### Core Functionality
 - **Expense Input:** Allows users to input daily expenses with categories and amounts.
 - **Budget Management:** Enables users to set a monthly expense limit. The screen shows the total expenses for the selected month, a progress bar to help visualize the spending against the budget, and the remaining budget amount, which turns red if the budget is exceeded.
-
-## Current Plan
-
-1. **Design the "Analytics" screen:** This screen will display a pie chart showing the breakdown of expenses by category for the selected month. It will also show a list of expenses for the selected month, grouped and sorted by category, so you can easily see where your money is going.
-2. **Implement the "Analytics" screen:** This will involve:
-    - Creating the UI for the "Analytics" screen.
-    - Adding the `fl_chart` package to the project to create the pie chart.
-    - Implementing the logic to fetch and process the expense data to be displayed on the chart and in the list.
-3. **Refine the UI/UX:** I will review the entire application and make any necessary adjustments to improve the overall user experience. This will include refining the theme, adding animations, and ensuring the app is intuitive and easy to use.
+- **Dashboard and Visualizations:** A comprehensive dashboard provides a visual summary of expenses, including:
+    - A **bar chart** to show total expenses for each category.
+    - A **pie chart** to visualize the percentage of spending per category.
+    - A summary card showing the **total expenses** for the selected month.
+    - A **line chart** to show the trend of expenses over time.

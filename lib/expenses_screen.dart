@@ -121,117 +121,125 @@ class ExpensesScreenState extends State<ExpensesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Column(
-        children: [
-          _buildMonthSelector(),
-          Expanded(
-            child: ValueListenableBuilder(
-              valueListenable: _expenseBox.listenable(),
-              builder: (context, Box<Expense> box, _) {
-                final filteredExpenses = box.values
-                    .where((expense) =>
-                        expense.date.year == _selectedMonth.year &&
-                        expense.date.month == _selectedMonth.month)
-                    .toList();
+      body: ValueListenableBuilder(
+        valueListenable: _expenseBox.listenable(),
+        builder: (context, Box<Expense> box, _) {
+          final filteredExpenses = box.values
+              .where((expense) =>
+                  expense.date.year == _selectedMonth.year &&
+                  expense.date.month == _selectedMonth.month)
+              .toList();
 
-                if (filteredExpenses.isEmpty) {
-                  return Center(
-                    child: Text(
-                      'No expenses for this month.',
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Theme.of(context)
-                              .textTheme
-                              .bodyLarge
-                              ?.color
-                              ?.withAlpha(153)),
-                    ),
-                  );
-                }
+          final totalForMonth =
+              filteredExpenses.fold(0.0, (sum, item) => sum + item.amount);
 
-                final groupedExpenses = groupBy<Expense, int>(
-                  filteredExpenses,
-                  (expense) => expense.date.day,
-                );
+          final groupedExpenses = groupBy<Expense, int>(
+            filteredExpenses,
+            (expense) => expense.date.day,
+          );
 
-                final sortedDays = groupedExpenses.keys.toList()
-                  ..sort((a, b) => b.compareTo(a));
+          final sortedDays = groupedExpenses.keys.toList()
+            ..sort((a, b) => b.compareTo(a));
 
-                return ListView.builder(
-                  padding: const EdgeInsets.all(8.0),
-                  itemCount: sortedDays.length,
-                  itemBuilder: (context, index) {
-                    final day = sortedDays[index];
-                    final dayExpenses = groupedExpenses[day]!;
-                    final dayTotal =
-                        dayExpenses.fold(0.0, (sum, item) => sum + item.amount);
-                    final date = dayExpenses.first.date;
+          final today = DateTime.now();
 
-                    return Card(
-                      margin: const EdgeInsets.only(
-                          left: 4.0, right: 4.0, bottom: 12),
-                      elevation: 3,
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(12)),
-                      ),
-                      child: ExpansionTile(
-                        shape: const Border(),
-                        collapsedShape: const Border(),
-                        title: Text(
-                          '${DateFormat.MMMMd().format(date)} - ${DateFormat.EEEE().format(date)}',
+          return Column(
+            children: [
+              _buildMonthSelector(totalForMonth),
+              Expanded(
+                child: filteredExpenses.isEmpty
+                    ? Center(
+                        child: Text(
+                          'No expenses for this month.',
                           style: TextStyle(
                               fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .titleLarge
-                                  ?.color),
-                        ),
-                        subtitle: Text(
-                          'Total: \$${dayTotal.toStringAsFixed(2)}',
-                          style: TextStyle(
-                              fontSize: 16,
                               color: Theme.of(context)
                                   .textTheme
                                   .bodyLarge
                                   ?.color
-                                  ?.withAlpha(153),
-                              fontWeight: FontWeight.w600),
+                                  ?.withAlpha(153)),
                         ),
-                        initiallyExpanded: true,
-                        children: dayExpenses.map<Widget>((expense) {
-                          return ListTile(
-                            onTap: () => _showExpensePreviewSheet(expense),
-                            leading: Icon(
-                              _categoryIcons[expense.category] ?? Icons.category,
-                              size: 30,
-                              color: Theme.of(context).colorScheme.primary,
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.all(8.0),
+                        itemCount: sortedDays.length,
+                        itemBuilder: (context, index) {
+                          final day = sortedDays[index];
+                          final dayExpenses = groupedExpenses[day]!;
+                          final dayTotal = dayExpenses.fold(
+                              0.0, (sum, item) => sum + item.amount);
+                          final date = dayExpenses.first.date;
+
+                          return Card(
+                            margin: const EdgeInsets.only(
+                                left: 4.0, right: 4.0, bottom: 12),
+                            elevation: 3,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(12)),
                             ),
-                            title: Text(
-                              expense.category,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
+                            child: ExpansionTile(
+                              shape: const Border(),
+                              collapsedShape: const Border(),
+                              title: Text(
+                                '${DateFormat.MMMMd().format(date)} - ${DateFormat.EEEE().format(date)}',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge
+                                        ?.color),
                               ),
-                            ),
-                            trailing: Text(
-                              '\$${expense.amount.toStringAsFixed(2)}',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                              subtitle: Text(
+                                'Total: ₹${dayTotal.toStringAsFixed(2)}',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.color
+                                        ?.withAlpha(153),
+                                    fontWeight: FontWeight.w600),
                               ),
+                              initiallyExpanded: date.day == today.day &&
+                                  date.month == today.month &&
+                                  date.year == today.year,
+                              children: dayExpenses.map<Widget>((expense) {
+                                return ListTile(
+                                  onTap: () =>
+                                      _showExpensePreviewSheet(expense),
+                                  leading: Icon(
+                                    _categoryIcons[expense.category] ??
+                                        Icons.category,
+                                    size: 30,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                  title: Text(
+                                    expense.category,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  trailing: Text(
+                                    '₹${expense.amount.toStringAsFixed(2)}',
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
                             ),
                           );
-                        }).toList(),
+                        },
                       ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddExpenseDialog(),
@@ -271,9 +279,9 @@ class ExpensesScreenState extends State<ExpensesScreen> {
     );
   }
 
-  Widget _buildMonthSelector() {
+  Widget _buildMonthSelector(double totalForMonth) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
       decoration: BoxDecoration(
         color: Theme.of(context).appBarTheme.backgroundColor,
         boxShadow: [
@@ -291,12 +299,24 @@ class ExpensesScreenState extends State<ExpensesScreen> {
             icon: const Icon(Icons.arrow_back_ios, size: 20),
             onPressed: () => _changeMonth(-1),
           ),
-          Text(
-            DateFormat.yMMMM().format(_selectedMonth),
-            style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.primary),
+          Column(
+            children: [
+              Text(
+                DateFormat.yMMMM().format(_selectedMonth),
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Total: ₹${totalForMonth.toStringAsFixed(2)}',
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.primary.withAlpha(200),
+                    fontWeight: FontWeight.w600),
+              ),
+            ],
           ),
           IconButton(
             icon: const Icon(Icons.arrow_forward_ios, size: 20),
@@ -343,7 +363,7 @@ class ExpensePreviewSheet extends StatelessWidget {
             const SizedBox(height: 24),
             Text('Category: ${expense.category}', style: const TextStyle(fontSize: 18)),
             const SizedBox(height: 12),
-            Text('Amount: \$${expense.amount.toStringAsFixed(2)}', style: const TextStyle(fontSize: 18)),
+            Text('Amount: ₹${expense.amount.toStringAsFixed(2)}', style: const TextStyle(fontSize: 18)),
             const SizedBox(height: 12),
             Text('Date: ${DateFormat.yMMMd().format(expense.date)}', style: const TextStyle(fontSize: 18)),
             if (expense.description != null && expense.description!.isNotEmpty)
@@ -573,7 +593,7 @@ class AddExpenseFormState extends State<AddExpenseForm> {
                     labelText: 'Amount',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    prefixText: '\$ ',
+                    prefixText: '₹ ',
                   ),
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),

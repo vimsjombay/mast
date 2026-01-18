@@ -92,13 +92,13 @@ class _BudgetScreenState extends State<BudgetScreen> {
                             if (hasBudget) ...[
                               Text(
                                 'Total Spent: '
-                                '${totalExpenses.toStringAsFixed(2)}',
+                                '₹${totalExpenses.toStringAsFixed(2)}',
                                 style: Theme.of(context).textTheme.bodyLarge,
                               ),
                               const SizedBox(height: 10),
                               Text(
                                 'Remaining: '
-                                '${remainingAmount.toStringAsFixed(2)}',
+                                '₹${remainingAmount.toStringAsFixed(2)}',
                                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                       color: remainingAmount >= 0 ? Colors.green.shade600 : Colors.red.shade600,
                                       fontWeight: FontWeight.bold,
@@ -149,8 +149,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('\$0.00', style: Theme.of(context).textTheme.bodySmall),
-            Text('\$${budgetAmount.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold)),
+            Text('₹0.00', style: Theme.of(context).textTheme.bodySmall),
+            Text('₹${budgetAmount.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold)),
           ],
         )
       ],
@@ -235,7 +235,7 @@ class _SetBudgetFormState extends State<SetBudgetForm> {
           controller: _amountController,
           decoration: const InputDecoration(
             labelText: 'Budget Amount',
-            prefixText: '\$ ',
+            prefixText: '₹ ',
           ),
           keyboardType: TextInputType.number,
           validator: (value) {
