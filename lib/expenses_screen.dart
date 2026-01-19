@@ -97,6 +97,7 @@ class ExpensesScreenState extends State<ExpensesScreen> {
       builder: (context) {
         return ExpensePreviewSheet(
           expense: expense,
+          categoryIcon: _categoryIcons[expense.category] ?? Icons.category,
           onEdit: () {
             Navigator.of(context).pop();
             _showAddExpenseDialog(expense: expense);
@@ -151,13 +152,14 @@ class ExpensesScreenState extends State<ExpensesScreen> {
                     ? Center(
                         child: Text(
                           'No expenses for this month.',
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.color
-                                    ?.withOpacity(0.6),
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.color
+                                        ?.withValues(alpha: 0.6),
+                                  ),
                         ),
                       )
                     : ListView.builder(
@@ -186,13 +188,16 @@ class ExpensesScreenState extends State<ExpensesScreen> {
                                 style: Theme.of(context).textTheme.titleLarge,
                               ),
                               subtitle: Text(
-                                'Total: ₹${dayTotal.toStringAsFixed(2)}',
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                'Total: \u20b9${dayTotal.toStringAsFixed(2)}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
                                       color: Theme.of(context)
                                           .textTheme
                                           .bodyMedium
                                           ?.color
-                                          ?.withOpacity(0.6),
+                                          ?.withValues(alpha: 0.6),
                                     ),
                               ),
                               initiallyExpanded: date.day == today.day &&
@@ -209,11 +214,15 @@ class ExpensesScreenState extends State<ExpensesScreen> {
                                   ),
                                   title: Text(
                                     expense.category,
-                                    style: Theme.of(context).textTheme.bodyLarge,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
                                   ),
                                   trailing: Text(
-                                    '₹${expense.amount.toStringAsFixed(2)}',
-                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    '\u20b9${expense.amount.toStringAsFixed(2)}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.copyWith(
                                           fontWeight: FontWeight.bold,
                                         ),
                                   ),
@@ -289,16 +298,20 @@ class ExpensesScreenState extends State<ExpensesScreen> {
             children: [
               Text(
                 DateFormat.yMMMM().format(_selectedMonth),
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
-                'Total: ₹${totalForMonth.toStringAsFixed(2)}',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
-                    ),
+                'Total: \u20b9${totalForMonth.toStringAsFixed(2)}',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
             ],
           ),
@@ -317,6 +330,7 @@ class ExpensesScreenState extends State<ExpensesScreen> {
 
 class ExpensePreviewSheet extends StatelessWidget {
   final Expense expense;
+  final IconData categoryIcon;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
@@ -325,63 +339,142 @@ class ExpensePreviewSheet extends StatelessWidget {
     required this.expense,
     required this.onEdit,
     required this.onDelete,
+    required this.categoryIcon,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Container(
+      padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
+        color: colorScheme.surface,
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 20,
+            spreadRadius: 5,
+          ),
+        ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Expense Details', style: Theme.of(context).textTheme.headlineMedium),
-            const SizedBox(height: 24),
-            Text('Category: ${expense.category}', style: Theme.of(context).textTheme.bodyLarge),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Handle
+          Container(
+            width: 40,
+            height: 4,
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            decoration: BoxDecoration(
+              color: colorScheme.onSurface.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Amount
+          Text(
+            '\u20b9${expense.amount.toStringAsFixed(2)}',
+            style: theme.textTheme.displaySmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: colorScheme.primary,
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Category
+          Chip(
+            avatar: Icon(categoryIcon, color: colorScheme.secondary),
+            label: Text(
+              expense.category,
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(color: colorScheme.secondary),
+            ),
+            backgroundColor: colorScheme.secondary.withValues(alpha: 0.12),
+          ),
+          const SizedBox(height: 24),
+
+          // Details
+          _buildDetailRow(
+            context,
+            icon: Icons.calendar_today,
+            title: 'Date',
+            value: DateFormat.yMMMd().format(expense.date),
+          ),
+          if (expense.description != null && expense.description!.isNotEmpty) ...[
             const SizedBox(height: 12),
-            Text('Amount: ₹${expense.amount.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodyLarge),
-            const SizedBox(height: 12),
-            Text('Date: ${DateFormat.yMMMd().format(expense.date)}', style: Theme.of(context).textTheme.bodyLarge),
-            if (expense.description != null && expense.description!.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 12.0),
-                child: Text('Description: ${expense.description}', style: Theme.of(context).textTheme.bodyLarge),
-              ),
-            const SizedBox(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Close'),
-                ),
-                const SizedBox(width: 12),
-                ElevatedButton(
-                  onPressed: onEdit,
-                  child: const Text('Edit'),
-                ),
-                const SizedBox(width: 12),
-                ElevatedButton(
-                  onPressed: onDelete,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.error,
-                    foregroundColor: Theme.of(context).colorScheme.onError,
-                  ),
-                  child: const Text('Delete'),
-                ),
-              ],
+            _buildDetailRow(
+              context,
+              icon: Icons.notes,
+              title: 'Description',
+              value: expense.description!,
             ),
           ],
-        ),
+          const SizedBox(height: 32),
+
+          // Actions
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: onDelete,
+                  icon: const Icon(Icons.delete_outline),
+                  label: const Text('Delete'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: colorScheme.error,
+                    side: BorderSide(color: colorScheme.error),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: FilledButton.icon(
+                  onPressed: onEdit,
+                  icon: const Icon(Icons.edit_outlined),
+                  label: const Text('Edit'),
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
+    );
+  }
+
+  Widget _buildDetailRow(BuildContext context,
+      {required IconData icon, required String title, required String value}) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final colorScheme = theme.colorScheme;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 20, color: colorScheme.onSurfaceVariant),
+        const SizedBox(width: 16),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title, style: textTheme.labelLarge),
+            const SizedBox(height: 2),
+            Text(value, style: textTheme.bodyLarge),
+          ],
+        ),
+      ],
     );
   }
 }
@@ -575,7 +668,7 @@ class AddExpenseFormState extends State<AddExpenseForm> {
                     labelText: 'Amount',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    prefixText: '₹ ',
+                    prefixText: '\u20b9 ',
                   ),
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
