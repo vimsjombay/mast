@@ -184,7 +184,7 @@ class ExpensesScreenState extends State<ExpensesScreen> {
                               shape: const Border(),
                               collapsedShape: const Border(),
                               title: Text(
-                                '${DateFormat.MMMMd().format(date)} - ${DateFormat.EEEE().format(date)}',
+                                '${DateFormat.MMMd().format(date)} - ${DateFormat.EEEE().format(date)}',
                                 style: Theme.of(context).textTheme.titleLarge,
                               ),
                               subtitle: Text(
@@ -407,7 +407,8 @@ class ExpensePreviewSheet extends StatelessWidget {
             title: 'Date',
             value: DateFormat.yMMMd().format(expense.date),
           ),
-          if (expense.description != null && expense.description!.isNotEmpty) ...[
+          if (expense.description != null &&
+              expense.description!.isNotEmpty) ...[
             const SizedBox(height: 12),
             _buildDetailRow(
               context,
